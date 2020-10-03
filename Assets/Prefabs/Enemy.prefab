@@ -11,7 +11,7 @@ GameObject:
   - component: {fileID: 3330136287215523864}
   - component: {fileID: 7838896940440273125}
   m_Layer: 8
-  m_Name: Enemy
+  m_Name: Sprite
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -48,7 +48,7 @@ SpriteRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: f6969de7dc2f6304d86a04e2d14df93a, type: 2}
+  - {fileID: 10754, guid: 0000000000000000f000000000000000, type: 0}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -91,6 +91,7 @@ GameObject:
   - component: {fileID: 5760967476170607105}
   - component: {fileID: 8574034811663882302}
   - component: {fileID: 8155639465497811940}
+  - component: {fileID: 3291749901585859069}
   - component: {fileID: 5760967476170607107}
   m_Layer: 8
   m_Name: Enemy
@@ -141,6 +142,19 @@ MonoBehaviour:
   isDead: 0
   currentHealth: 1
   maxHealth: 100
+--- !u!114 &3291749901585859069
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5760967476170607116}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8d5210dac90b61d43b99010d38f7a1f5, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  hurtColor: {r: 1, g: 0, b: 0, a: 1}
 --- !u!65 &5760967476170607107
 BoxCollider:
   m_ObjectHideFlags: 0

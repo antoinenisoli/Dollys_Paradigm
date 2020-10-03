@@ -2,12 +2,16 @@
 using System.Collections.Generic;
 using UnityEngine;
 
+[ExecuteInEditMode]
 public class Sc_Billboard : MonoBehaviour
 {
-    Camera mainCam => Camera.main;
+    Camera m_Camera => Camera.main;
 
     private void LateUpdate()
     {
-        transform.LookAt(transform.position + mainCam.transform.rotation * Vector3.forward, mainCam.transform.rotation * Vector3.up);
+        transform.LookAt(transform.position + m_Camera.transform.rotation * Vector3.forward, m_Camera.transform.rotation * Vector3.up);
+        Vector3 eulerAngles = transform.eulerAngles;
+        eulerAngles.x = 0;
+        transform.eulerAngles = eulerAngles;
     }
 }

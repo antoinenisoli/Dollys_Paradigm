@@ -5,10 +5,13 @@ using UnityEngine;
 public class Sc_Gun : MonoBehaviour
 {
     Sc_PlayerController player => FindObjectOfType<Sc_PlayerController>();
-    [SerializeField] LayerMask enemyLayer = 1 >> 8;
     [SerializeField] int damage = 5;
     [SerializeField] float shootRange = 50;
     [SerializeField] GameObject shootFX;
+    [SerializeField] AnimationClip clip;
+    float timer;
+
+    Animator anim => GetComponent<Animator>();
 
     [SerializeField] private int currentAmmo;
     public int CurrentAmmo 
@@ -26,19 +29,27 @@ public class Sc_Gun : MonoBehaviour
 
     void Shooting()
     {
-        if (Input.GetMouseButtonDown(0))
+        timer += Time.deltaTime;
+        if (Input.GetMouseButtonDown(0) && timer > 0.05f)
         {
-            Ray ray = player.viewCam.ViewportPointToRay(new Vector3(0.5f, 0.5f, 0));
-            bool find = Physics.Raycast(ray, out RaycastHit hit, shootRange);
-            if (find)
-            {
-                Instantiate(shootFX, hit.point, Quaternion.identity);
+            anim.SetTrigger("Shoot");
+            timer = 0;
+        }
+    }
 
-                Sc_Health chara = hit.collider.GetComponentInParent<Sc_Health>();
-                if (chara)
-                {
-                    chara.TakeDamages(damage);
-                }
+    public void Shoot()
+    {
+        Ray ray = player.viewCam.ViewportPointToRay(new Vector3(0.5f, 0.5f, 0));
+        bool find = Physics.Raycast(ray, out RaycastHit hit, shootRange);
+        CurrentAmmo--;
+        if (find)
+        {
+            Instantiate(shootFX, hit.point, Quaternion.identity);
+
+            Sc_Character chara = hit.collider.GetComponentInParent<Sc_Character>();
+            if (chara)
+            {
+                chara.Hurt(damage);
             }
         }
     }

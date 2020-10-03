@@ -7,6 +7,7 @@ public class Sc_PlayerController : Sc_Character
 {
     public Camera viewCam => Camera.main;
     Rigidbody rb => GetComponent<Rigidbody>();
+    public Image gunSprite;
 
     [SerializeField] float moveSpeed = 800;
     [SerializeField] float jumpForce = 5;
@@ -22,9 +23,10 @@ public class Sc_PlayerController : Sc_Character
     {
         Vector3 horizontalAxis = transform.right * Input.GetAxisRaw("Horizontal") * Time.deltaTime;
         Vector3 verticalAxis = transform.forward * Input.GetAxisRaw("Vertical") * Time.deltaTime;
-        Vector3 move = (horizontalAxis + verticalAxis) * moveSpeed;
-        move.y = rb.velocity.y;
-        rb.velocity = move;
+        Vector3 normalized = (horizontalAxis + verticalAxis).normalized;
+
+        Vector3 move = normalized * moveSpeed;
+        rb.velocity = new Vector3(move.x, rb.velocity.y, move.z);
     }
 
     void CameraControl()
@@ -48,6 +50,13 @@ public class Sc_PlayerController : Sc_Character
         {
             rb.AddForce(Vector3.up * jumpForce, ForceMode.Impulse);
         }
+    }
+
+    public override IEnumerator HurtColor()
+    {
+        gunSprite.color = hurtColor;
+        yield return new WaitForSeconds(0.3f);
+        gunSprite.color = Color.white;
     }
 
     private void FixedUpdate()

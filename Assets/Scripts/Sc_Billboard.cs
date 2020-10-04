@@ -9,9 +9,12 @@ public class Sc_Billboard : MonoBehaviour
 
     private void LateUpdate()
     {
-        transform.LookAt(transform.position + m_Camera.transform.rotation * Vector3.forward, m_Camera.transform.rotation * Vector3.up);
-        Vector3 eulerAngles = transform.eulerAngles;
-        eulerAngles.x = 0;
-        transform.eulerAngles = eulerAngles;
+        if (m_Camera != null)
+        {
+            transform.LookAt(transform.position + m_Camera.transform.rotation * Vector3.forward, m_Camera.transform.rotation * Vector3.up);
+            Vector3 eulerAngles = transform.eulerAngles;
+            eulerAngles.x = 0;
+            transform.eulerAngles = eulerAngles;
+        }
     }
 }

@@ -19,6 +19,11 @@ public class Sc_PlayerController : Sc_Character
     [SerializeField] float groundDist = 1f;
     bool detectedGround;
 
+    public override void Death()
+    {
+        print("game over");
+    }
+
     void FPS_Move()
     {
         Vector3 horizontalAxis = transform.right * Input.GetAxisRaw("Horizontal") * Time.deltaTime;
@@ -59,6 +64,13 @@ public class Sc_PlayerController : Sc_Character
         gunSprite.color = Color.white;
     }
 
+    public override IEnumerator HealColor()
+    {
+        gunSprite.color = Color.green;
+        yield return new WaitForSeconds(0.3f);
+        gunSprite.color = Color.white;
+    }
+
     private void FixedUpdate()
     {
         detectedGround = Physics.Raycast(transform.position, Vector3.down, groundDist);
@@ -69,5 +81,10 @@ public class Sc_PlayerController : Sc_Character
         FPS_Move();
         CameraControl();
         Jump();
+
+        if (Input.GetKeyDown(KeyCode.P))
+        {
+            Time.timeScale = 0;
+        }
     }
 }

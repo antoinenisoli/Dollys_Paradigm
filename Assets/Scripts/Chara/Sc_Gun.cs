@@ -9,6 +9,8 @@ public class Sc_Gun : MonoBehaviour
     [SerializeField] float shootRange = 50;
     [SerializeField] GameObject shootFX;
     [SerializeField] AnimationClip clip;
+    [SerializeField] LayerMask shootLayer;
+    [SerializeField] float shootDelay = 0.1f;
     float timer;
 
     Animator anim => GetComponent<Animator>();
@@ -30,7 +32,7 @@ public class Sc_Gun : MonoBehaviour
     void Shooting()
     {
         timer += Time.deltaTime;
-        if (Input.GetMouseButtonDown(0) && timer > 0.05f)
+        if (Input.GetMouseButtonDown(0) && timer > shootDelay)
         {
             anim.SetTrigger("Shoot");
             timer = 0;
@@ -40,7 +42,7 @@ public class Sc_Gun : MonoBehaviour
     public void Shoot()
     {
         Ray ray = player.viewCam.ViewportPointToRay(new Vector3(0.5f, 0.5f, 0));
-        bool find = Physics.Raycast(ray, out RaycastHit hit, shootRange);
+        bool find = Physics.Raycast(ray, out RaycastHit hit, shootRange, shootLayer);
         CurrentAmmo--;
         if (find)
         {

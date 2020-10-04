@@ -4,9 +4,11 @@ using UnityEngine;
 
 public class Sc_Health : MonoBehaviour
 {
+    Sc_Character chara => GetComponent<Sc_Character>();
     public bool isDead;
     [SerializeField] int currentHealth = 1;
     [SerializeField] int maxHealth = 1;
+
     public int MaxHealth
     {
         get => maxHealth;
@@ -32,7 +34,7 @@ public class Sc_Health : MonoBehaviour
                 if (!isDead)
                 {
                     isDead = true;
-                    Death();
+                    chara.Death();
                 }
             }
 
@@ -48,11 +50,6 @@ public class Sc_Health : MonoBehaviour
     private void Awake()
     {
         CurrentHealth = MaxHealth;
-    }
-
-    public void Death()
-    {
-        Destroy(gameObject);
     }
 
     public void TakeDamages(int dmg)

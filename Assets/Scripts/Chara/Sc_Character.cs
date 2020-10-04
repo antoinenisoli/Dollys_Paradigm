@@ -10,10 +10,28 @@ public class Sc_Character : MonoBehaviour
     public virtual void Hurt(int _dmg)
     {
         Health.TakeDamages(_dmg);
-        StartCoroutine(HurtColor());
+        
+        if (_dmg > 0)
+        {
+            StartCoroutine(HurtColor());
+        }
+        else
+        {
+            StartCoroutine(HealColor());
+        }
+    }
+
+    public virtual void Death()
+    {
+        Destroy(gameObject);
     }
 
     public virtual IEnumerator HurtColor()
+    {
+        yield return null;
+    }
+
+    public virtual IEnumerator HealColor()
     {
         yield return null;
     }

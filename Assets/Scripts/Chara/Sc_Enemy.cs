@@ -56,6 +56,12 @@ public class Sc_Enemy : Sc_Character
                 player = _player;
             }
         }
+
+        if (Health.isDead)
+        {
+            agent.isStopped = true;
+            return;
+        }
     }
 
     private void FixedUpdate()
@@ -65,13 +71,13 @@ public class Sc_Enemy : Sc_Character
 
     public override void Death()
     {
-        base.Death();
         anim.SetTrigger("Death");
     }
 
     public virtual void Fight()
     {
-        
+        if (Health.isDead)
+            return;
     }
 
     public virtual void LaunchAttack()
@@ -79,7 +85,7 @@ public class Sc_Enemy : Sc_Character
         timer = 0;
     }
 
-    private void Update()
+    public virtual void Update()
     {
         anim.SetBool("isDead", Health.isDead);
         isClose = distanceToPlayer < closeDistance;

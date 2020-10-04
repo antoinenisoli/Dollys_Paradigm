@@ -34,7 +34,7 @@ public class Sc_Character : MonoBehaviour
 
     public virtual void Death()
     {
-        Destroy(gameObject);
+        
     }
 
     public virtual IEnumerator ChangeLifeColor(Color color)

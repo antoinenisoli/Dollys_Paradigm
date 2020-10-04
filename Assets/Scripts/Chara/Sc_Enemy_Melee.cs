@@ -13,6 +13,32 @@ public class Sc_Enemy_Melee : Sc_Enemy
         base.Awake();
     }
 
+    public override void Detect()
+    {
+        base.Detect();
+
+        if (player != null)
+        {
+            Vector3 playerPos = player.transform.position;
+            distanceToPlayer = Vector3.Distance(transform.position, playerPos);
+
+            if (player.Health.isDead)
+            {
+                agent.SetDestination(spawnPos);
+                agent.isStopped = false;
+            }
+            else
+            {
+                agent.isStopped = isClose;
+
+                if (!isClose)
+                {
+                    agent.SetDestination(playerPos);
+                }
+            }
+        }
+    }
+
     public override void Fight()
     {
         base.Fight();
@@ -37,5 +63,12 @@ public class Sc_Enemy_Melee : Sc_Enemy
     {
         base.LaunchAttack();
         player.Hurt(damage);
+    }
+
+    public override void Update()
+    {
+        Vector2 vel = agent.velocity.normalized;
+        anim.SetFloat("Velocity", vel.sqrMagnitude);
+        base.Update();       
     }
 }

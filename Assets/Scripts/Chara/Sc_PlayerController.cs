@@ -6,7 +6,7 @@ using UnityEngine.UI;
 public class Sc_PlayerController : Sc_Character
 {
     public Camera viewCam => Camera.main;
-    Rigidbody rb => GetComponent<Rigidbody>();
+    public Rigidbody rb => GetComponent<Rigidbody>();
 
     [Header("Clone corpse")]
     public bool HasCorpse;

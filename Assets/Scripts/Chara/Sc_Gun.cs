@@ -7,7 +7,7 @@ public class Sc_Gun : MonoBehaviour
     Sc_PlayerController player => FindObjectOfType<Sc_PlayerController>();
     [SerializeField] int damage = 5;
     [SerializeField] float shootRange = 50;
-    [SerializeField] GameObject shootFX;
+    [SerializeField] GameObject[] shootFX;
     [SerializeField] AnimationClip clip;
     [SerializeField] LayerMask shootLayer;
     [SerializeField] float shootDelay = 0.1f;
@@ -16,7 +16,7 @@ public class Sc_Gun : MonoBehaviour
     [SerializeField] bool Auto;
     Animator anim => GetComponent<Animator>();
 
-    [SerializeField] private int currentAmmo;
+    private int currentAmmo;
     public int CurrentAmmo 
     { 
         get => currentAmmo;
@@ -61,25 +61,36 @@ public class Sc_Gun : MonoBehaviour
         CurrentAmmo--;
         if (find)
         {
-            Instantiate(shootFX, hit.point, Quaternion.identity);
-
+            Vector3 impactPos = hit.point + hit.normal;
             Sc_Character chara = hit.collider.GetComponentInParent<Sc_Character>();
             if (chara)
             {
-                if (Auto)
+                Instantiate(shootFX[1], impactPos, Quaternion.LookRotation(hit.normal));
+
+                if (!chara.Health.isDead)
                 {
-                    chara.Hurt(damage);
+                    if (Auto)
+                    {
+                        chara.Hurt(damage);
+                    }
+                    else
+                    {
+                        chara.Hurt(damage * 3);
+                    }
                 }
-                else
-                {
-                    chara.Hurt(damage*3);
-                }
+            }
+            else
+            {
+                Instantiate(shootFX[0], impactPos, Quaternion.LookRotation(hit.normal));
             }
         }
     }
 
     void Update()
     {
+        Vector2 vel = new Vector2(player.rb.velocity.x, player.rb.velocity.z).normalized;
+        anim.SetFloat("Velocity", vel.sqrMagnitude);
+
         if (player.Health.isDead)
             return;
 

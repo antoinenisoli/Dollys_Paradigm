@@ -7,7 +7,14 @@ public class Sc_PlayerController : Sc_Character
 {
     public Camera viewCam => Camera.main;
     Rigidbody rb => GetComponent<Rigidbody>();
-    public Image gunSprite;
+
+    [Header("Clone corpse")]
+    public bool HasCorpse;
+    [SerializeField] Image hitScreen;
+    [SerializeField] GameObject corpse;
+    [SerializeField] GameObject SpawnCorpse;
+    GameObject lastSpawnedCorpse;
+    public GameObject lastDeadCorpse;
 
     [SerializeField] float moveSpeed = 800;
     [SerializeField] float jumpForce = 5;
@@ -21,7 +28,21 @@ public class Sc_PlayerController : Sc_Character
 
     public override void Death()
     {
-        print("game over");
+        if (lastDeadCorpse != null)
+        {
+            Destroy(lastDeadCorpse);
+            lastDeadCorpse = null;
+        }
+
+        lastDeadCorpse = Instantiate(corpse, transform.position, Quaternion.identity);
+        HasCorpse = false;
+        if (lastSpawnedCorpse != null)
+        {
+            Destroy(lastSpawnedCorpse);
+            lastSpawnedCorpse = null;
+        }
+
+        Sc_EventManager.current.GameOverScreen();
     }
 
     void FPS_Move()
@@ -57,18 +78,14 @@ public class Sc_PlayerController : Sc_Character
         }
     }
 
-    public override IEnumerator HurtColor()
+    public override IEnumerator ChangeLifeColor(Color color)
     {
-        gunSprite.color = hurtColor;
-        yield return new WaitForSeconds(0.3f);
-        gunSprite.color = Color.white;
-    }
-
-    public override IEnumerator HealColor()
-    {
-        gunSprite.color = Color.green;
-        yield return new WaitForSeconds(0.3f);
-        gunSprite.color = Color.white;
+        Color newCol = color;
+        hitScreen.gameObject.SetActive(true);
+        newCol.a = 0.4f;
+        hitScreen.color = newCol;
+        yield return new WaitForSeconds(0.15f);
+        hitScreen.gameObject.SetActive(false);
     }
 
     private void FixedUpdate()
@@ -78,9 +95,23 @@ public class Sc_PlayerController : Sc_Character
 
     private void Update()
     {
-        FPS_Move();
-        CameraControl();
-        Jump();
+        if (!Health.isDead)
+        {
+            FPS_Move();
+            CameraControl();
+            Jump();
+
+            if (Input.GetKeyDown(KeyCode.E) && HasCorpse)
+            {
+                lastSpawnedCorpse = Instantiate(SpawnCorpse, transform.position + (transform.forward * 3), Quaternion.identity);
+                HasCorpse = false;
+                spawnPos = lastSpawnedCorpse.transform.position;
+            }
+        }
+        else
+        {
+            rb.velocity = new Vector3(0, rb.velocity.y, 0);
+        }
 
         if (Input.GetKeyDown(KeyCode.P))
         {

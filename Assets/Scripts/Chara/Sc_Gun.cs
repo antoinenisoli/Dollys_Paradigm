@@ -13,6 +13,7 @@ public class Sc_Gun : MonoBehaviour
     [SerializeField] float shootDelay = 0.1f;
     float timer;
 
+    [SerializeField] bool Auto;
     Animator anim => GetComponent<Animator>();
 
     [SerializeField] private int currentAmmo;
@@ -32,10 +33,24 @@ public class Sc_Gun : MonoBehaviour
     void Shooting()
     {
         timer += Time.deltaTime;
-        if (Input.GetMouseButtonDown(0) && timer > shootDelay)
+        if (Auto)
         {
-            anim.SetTrigger("Shoot");
-            timer = 0;
+            bool holdingFire = Input.GetMouseButton(0);
+            anim.SetBool("HoldingFire", holdingFire);
+
+            if (holdingFire && timer > shootDelay)
+            {
+                Shoot();
+                timer = 0;
+            }
+        }
+        else
+        {
+            if (Input.GetMouseButtonDown(0) && timer > shootDelay)
+            {
+                anim.SetTrigger("Shoot");
+                timer = 0;
+            }
         }
     }
 
@@ -51,13 +66,23 @@ public class Sc_Gun : MonoBehaviour
             Sc_Character chara = hit.collider.GetComponentInParent<Sc_Character>();
             if (chara)
             {
-                chara.Hurt(damage);
+                if (Auto)
+                {
+                    chara.Hurt(damage);
+                }
+                else
+                {
+                    chara.Hurt(damage*3);
+                }
             }
         }
     }
 
     void Update()
     {
+        if (player.Health.isDead)
+            return;
+
         Shooting();
     }
 }

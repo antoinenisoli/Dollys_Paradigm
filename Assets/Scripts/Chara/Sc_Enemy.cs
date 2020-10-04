@@ -8,80 +8,52 @@ public class Sc_Enemy : Sc_Character
 {
     public NavMeshSurface surface;
 
-    SpriteRenderer spr => GetComponentInChildren<SpriteRenderer>();
-    NavMeshAgent agent => GetComponent<NavMeshAgent>();
+    protected Animator anim => GetComponentInChildren<Animator>();
+    protected SpriteRenderer spr => GetComponentInChildren<SpriteRenderer>();
+    protected NavMeshAgent agent => GetComponent<NavMeshAgent>();
+    protected Material mat;
 
     [SerializeField] protected LayerMask playerLayer;
     [SerializeField] protected float aggroRadius = 5;
     protected Collider[] enemies;
     protected Sc_PlayerController player;
 
-    [SerializeField] protected float attackDelay = 1;
+    [SerializeField] protected float attackDelay = 1.5f;
     [SerializeField] protected float distanceToPlayer;
     [SerializeField] protected float closeDistance;
-    protected float timer;
-    protected bool isClose;
+    [SerializeField] protected float timer;
+    [SerializeField] protected bool isClose;
 
-    [SerializeField] protected bool detectBlock;
-    [SerializeField] protected LayerMask blockLayer;
-    [SerializeField] protected float rayThickness = 2;
-
-    private void Awake()
+    public virtual void Awake()
     {
         surface.BuildNavMesh();
+        mat = spr.material;
     }
 
-    private void OnDrawGizmosSelected()
+    public virtual void OnDrawGizmosSelected()
     {
         Gizmos.color = Color.red;
         Gizmos.DrawWireSphere(transform.position, aggroRadius);
-
-        if (player != null)
-        {
-            Gizmos.color = Color.white;
-            Gizmos.DrawWireSphere(player.transform.position, rayThickness);
-        }
     }
 
-    public override IEnumerator HurtColor()
+    public override IEnumerator ChangeLifeColor(Color color)
     {
-        spr.color = hurtColor;
-        yield return new WaitForSeconds(0.3f);
-        spr.color = Color.white;
+        mat.EnableKeyword("_EMISSION");
+        yield return new WaitForSeconds(0.15f);
+        mat.DisableKeyword("_EMISSION");
     }
 
-    void Detect()
+    public virtual void Detect()
     {
+        if (player != null && (enemies.Length <= 0 || player.Health.isDead))
+            player = null;
+
         foreach (Collider col in enemies)
         {
             Sc_PlayerController _player = col.GetComponentInParent<Sc_PlayerController>();
             if (_player)
             {
                 player = _player;
-            }
-        }
-
-        if (enemies.Length <= 0)
-            player = null;
-
-        if (player != null)
-        {           
-            distanceToPlayer = Vector3.Distance(transform.position, player.transform.position);
-            Vector3 playerPos = player.transform.position;
-            playerPos.y = transform.position.y;
-
-            Ray ray = new Ray(transform.position, playerPos - transform.position);
-            Debug.DrawRay(transform.position, playerPos - transform.position);
-            detectBlock = Physics.SphereCast(ray, rayThickness, out RaycastHit hit, distanceToPlayer, blockLayer);
-
-            if (isClose && !detectBlock)
-            {
-                agent.isStopped = true;
-            }
-            else
-            {
-                agent.isStopped = false;
-                agent.SetDestination(player.transform.position);
             }
         }
     }
@@ -91,15 +63,31 @@ public class Sc_Enemy : Sc_Character
         enemies = Physics.OverlapSphere(transform.position, aggroRadius, playerLayer);               
     }
 
-    public virtual void Attack()
+    public override void Death()
+    {
+        base.Death();
+        anim.SetTrigger("Death");
+    }
+
+    public virtual void Fight()
     {
         
     }
 
+    public virtual void LaunchAttack()
+    {
+        timer = 0;
+    }
+
     private void Update()
     {
+        anim.SetBool("isDead", Health.isDead);
         isClose = distanceToPlayer < closeDistance;
         Detect();
-        Attack();
+
+        if (player != null && player.Health.isDead)
+            return;
+
+        Fight();
     }
 }

@@ -22,6 +22,7 @@ public class Sc_Health : MonoBehaviour
             maxHealth = value;
         }
     }
+
     public int CurrentHealth
     {
         get => currentHealth;
@@ -29,12 +30,14 @@ public class Sc_Health : MonoBehaviour
         {
             if (value <= 0)
             {
-                value = 0;
-
                 if (!isDead)
                 {
                     isDead = true;
                     chara.Death();
+                }
+                else
+                {
+                    value = 0;
                 }
             }
 
@@ -45,11 +48,6 @@ public class Sc_Health : MonoBehaviour
 
             currentHealth = value;
         }
-    }
-
-    private void Awake()
-    {
-        CurrentHealth = MaxHealth;
     }
 
     public void TakeDamages(int dmg)

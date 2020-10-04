@@ -5,20 +5,31 @@ using UnityEngine;
 public class Sc_Character : MonoBehaviour
 {
     public Sc_Health Health => GetComponent<Sc_Health>();
-    public Color hurtColor = Color.red;
+    protected Vector3 spawnPos;
+
+    public virtual void Start()
+    {
+        spawnPos = transform.position;
+        Sc_EventManager.current.onGlobalRespawn += Respawn;
+        Respawn();
+    }
+
+    public virtual void Respawn()
+    {
+        print(gameObject.name + " respawn");
+        Health.CurrentHealth = Health.MaxHealth;
+        transform.position = spawnPos;
+        Health.isDead = false;
+    }
 
     public virtual void Hurt(int _dmg)
     {
         Health.TakeDamages(_dmg);
         
         if (_dmg > 0)
-        {
-            StartCoroutine(HurtColor());
-        }
+            StartCoroutine(ChangeLifeColor(Color.red));
         else
-        {
-            StartCoroutine(HealColor());
-        }
+            StartCoroutine(ChangeLifeColor(Color.green));
     }
 
     public virtual void Death()
@@ -26,12 +37,7 @@ public class Sc_Character : MonoBehaviour
         Destroy(gameObject);
     }
 
-    public virtual IEnumerator HurtColor()
-    {
-        yield return null;
-    }
-
-    public virtual IEnumerator HealColor()
+    public virtual IEnumerator ChangeLifeColor(Color color)
     {
         yield return null;
     }

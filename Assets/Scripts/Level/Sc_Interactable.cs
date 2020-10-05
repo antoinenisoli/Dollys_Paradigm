@@ -7,6 +7,11 @@ public class Sc_Interactable : MonoBehaviour
     public bool canActivate;
     protected bool activated;
 
+    public virtual void Open()
+    {
+        canActivate = true;
+    }
+
     public virtual void Activate(Sc_Character chara)
     {
         if (activated && !canActivate)

@@ -11,7 +11,7 @@ GameObject:
   - component: {fileID: 2546463851754152214}
   - component: {fileID: 6777316962832931616}
   - component: {fileID: 950634136998586329}
-  - component: {fileID: 5610597417691466860}
+  - component: {fileID: 8276281936138149024}
   m_Layer: 0
   m_Name: SkySphere
   m_TagString: Untagged
@@ -79,22 +79,17 @@ MeshRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 0
---- !u!95 &5610597417691466860
-Animator:
-  serializedVersion: 3
+--- !u!114 &8276281936138149024
+MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1517012381828059909}
   m_Enabled: 1
-  m_Avatar: {fileID: 9000000, guid: ebc4be695756cdc4c90523f39b91c84c, type: 3}
-  m_Controller: {fileID: 0}
-  m_CullingMode: 0
-  m_UpdateMode: 0
-  m_ApplyRootMotion: 0
-  m_LinearVelocityBlending: 0
-  m_WarningMessage: 
-  m_HasTransformHierarchy: 1
-  m_AllowConstantClipSamplingOptimization: 1
-  m_KeepAnimatorControllerStateOnDisable: 0
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 07e1cbe0588f5f544b1f16352cbc33c3, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  speed: 2
+  type: 1

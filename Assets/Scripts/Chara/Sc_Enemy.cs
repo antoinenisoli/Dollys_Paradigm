@@ -6,11 +6,11 @@ using UnityEngine.AI;
 
 public class Sc_Enemy : Sc_Character
 {
-    public NavMeshSurface surface;
-
     protected Animator anim => GetComponentInChildren<Animator>();
     protected SpriteRenderer spr => GetComponentInChildren<SpriteRenderer>();
     protected NavMeshAgent agent => GetComponent<NavMeshAgent>();
+
+    public NavMeshSurface surface;
     protected Material mat;
 
     [SerializeField] protected LayerMask playerLayer;
@@ -23,11 +23,13 @@ public class Sc_Enemy : Sc_Character
     [SerializeField] protected float closeDistance;
     [SerializeField] protected float timer;
     [SerializeField] protected bool isClose;
+    [SerializeField] AudioSource attackSound;
 
     public virtual void Awake()
     {
         surface.BuildNavMesh();
         mat = spr.material;
+        mat.DisableKeyword("_EMISSION");
     }
 
     public virtual void OnDrawGizmosSelected()
@@ -82,6 +84,7 @@ public class Sc_Enemy : Sc_Character
 
     public virtual void LaunchAttack()
     {
+        attackSound.Play();
         timer = 0;
     }
 

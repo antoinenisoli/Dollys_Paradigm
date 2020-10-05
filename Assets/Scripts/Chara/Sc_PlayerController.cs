@@ -8,14 +8,16 @@ public class Sc_PlayerController : Sc_Character
     public Camera viewCam => Camera.main;
     public Rigidbody rb => GetComponent<Rigidbody>();
     Sc_Gun myGun => FindObjectOfType<Sc_Gun>();
+    Light myLight;
 
     [Header("Clone corpse")]
     public bool HasCorpse;
     [SerializeField] Image hitScreen;
+    [SerializeField] Image corpseIcon;
     [SerializeField] GameObject corpse;
     [SerializeField] GameObject SpawnCorpse;
     GameObject lastSpawnedCorpse;
-    public GameObject lastDeadCorpse;
+    GameObject lastDeadCorpse;
 
     [SerializeField] float moveSpeed = 800;
     [SerializeField] float jumpForce = 5;
@@ -26,6 +28,12 @@ public class Sc_PlayerController : Sc_Character
     [SerializeField] LayerMask groundLayer;
     [SerializeField] float groundDist = 1f;
     bool detectedGround;
+
+    public override void Start()
+    {
+        base.Start();
+        myLight = GetComponentInChildren<Light>();
+    }
 
     public override void Death()
     {
@@ -82,11 +90,13 @@ public class Sc_PlayerController : Sc_Character
     public override IEnumerator ChangeLifeColor(Color color)
     {
         Color newCol = color;
+        hit = true;
         hitScreen.gameObject.SetActive(true);
         newCol.a = 0.4f;
         hitScreen.color = newCol;
-        yield return new WaitForSeconds(0.15f);
+        yield return new WaitForSeconds(0.8f);
         hitScreen.gameObject.SetActive(false);
+        hit = false;
     }
 
     private void FixedUpdate()
@@ -104,6 +114,24 @@ public class Sc_PlayerController : Sc_Character
         }
     }
 
+    void UseInputs()
+    {
+        if (Input.GetKeyDown(KeyCode.P))
+        {
+            Time.timeScale = 0;
+        }
+
+        if (Input.GetButtonDown("Cancel"))
+        {
+            Application.Quit();
+        }
+
+        if (Input.GetButtonDown("Torch"))
+        {
+            myLight.gameObject.SetActive(!myLight.gameObject.activeSelf);
+        }
+    }
+
     private void Update()
     {
         if (!Health.isDead)
@@ -118,14 +146,11 @@ public class Sc_PlayerController : Sc_Character
             rb.velocity = new Vector3(0, rb.velocity.y, 0);
         }
 
-        if (Input.GetKeyDown(KeyCode.P))
-        {
-            Time.timeScale = 0;
-        }
+        if (HasCorpse)
+            corpseIcon.material.EnableKeyword("_EMISSION");
+        else
+            corpseIcon.material.DisableKeyword("_EMISSION");
 
-        if (Input.GetButtonDown("Cancel"))
-        {
-            Application.Quit();
-        }
+        UseInputs();
     }
 }

@@ -5,6 +5,7 @@ using UnityEngine;
 public class Sc_Character : MonoBehaviour
 {
     public Sc_Health Health => GetComponent<Sc_Health>();
+    protected bool hit;
     protected Vector3 spawnPos;
 
     public virtual void Start()
@@ -24,6 +25,9 @@ public class Sc_Character : MonoBehaviour
 
     public virtual void Hurt(int _dmg)
     {
+        if (_dmg > 0 && hit)
+            return;
+
         Health.TakeDamages(_dmg);
         
         if (_dmg > 0)

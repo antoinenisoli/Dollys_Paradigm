@@ -5,6 +5,9 @@ using UnityEngine;
 public class Sc_Gun : MonoBehaviour
 {
     Sc_PlayerController player => FindObjectOfType<Sc_PlayerController>();
+    Animator anim => GetComponent<Animator>();
+
+    AudioSource sound => GetComponentInChildren<AudioSource>();
     [SerializeField] int damage = 5;
     [SerializeField] float shootRange = 50;
     [SerializeField] GameObject[] shootFX;
@@ -18,7 +21,6 @@ public class Sc_Gun : MonoBehaviour
     [SerializeField] bool Auto;
     [SerializeField] LayerMask interactLayer;
     [SerializeField] GameObject useText;
-    Animator anim => GetComponent<Animator>();
 
     private int currentAmmo;
     public int CurrentAmmo 
@@ -42,10 +44,20 @@ public class Sc_Gun : MonoBehaviour
             bool holdingFire = Input.GetButton("Fire1");
             anim.SetBool("HoldingFire", holdingFire);
 
-            if (holdingFire && timer > shootDelay)
+            if (holdingFire)
             {
-                Shoot();
-                timer = 0;
+                if (!sound.isPlaying)
+                    sound.Play();
+
+                if (timer > shootDelay)
+                {
+                    Shoot();
+                    timer = 0;
+                }               
+            }
+            else
+            {
+                sound.Stop();
             }
         }
         else

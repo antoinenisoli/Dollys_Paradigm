@@ -73,7 +73,7 @@ public class Sc_Enemy_Shooter : Sc_Enemy
             Debug.DrawRay(transform.position, playerPos - transform.position);
             detectBlock = Physics.SphereCast(ray, rayThickness, out RaycastHit hit, distanceToPlayer, blockLayer);
 
-            if (player.Health.isDead)
+            if (player.Health.isDead || agent.pathStatus == NavMeshPathStatus.PathPartial)
             {
                 agent.SetDestination(spawnPos);
                 agent.isStopped = false;

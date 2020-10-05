@@ -7,6 +7,7 @@ public class Sc_PlayerController : Sc_Character
 {
     public Camera viewCam => Camera.main;
     public Rigidbody rb => GetComponent<Rigidbody>();
+    Sc_Gun myGun => FindObjectOfType<Sc_Gun>();
 
     [Header("Clone corpse")]
     public bool HasCorpse;
@@ -34,7 +35,7 @@ public class Sc_PlayerController : Sc_Character
             lastDeadCorpse = null;
         }
 
-        lastDeadCorpse = Instantiate(corpse, transform.position, Quaternion.identity);
+        lastDeadCorpse = Instantiate(corpse, transform.position + Vector3.up * 3f, Quaternion.identity);
         HasCorpse = false;
         if (lastSpawnedCorpse != null)
         {
@@ -93,6 +94,16 @@ public class Sc_PlayerController : Sc_Character
         detectedGround = Physics.Raycast(transform.position, Vector3.down, groundDist);
     }
 
+    void SetClone()
+    {
+        if (Input.GetButtonDown("Interact") && HasCorpse && !myGun.detectInteract)
+        {
+            lastSpawnedCorpse = Instantiate(SpawnCorpse, transform.position + (transform.forward * 3), Quaternion.identity);
+            HasCorpse = false;
+            spawnPos = lastSpawnedCorpse.transform.position;
+        }
+    }
+
     private void Update()
     {
         if (!Health.isDead)
@@ -100,13 +111,7 @@ public class Sc_PlayerController : Sc_Character
             FPS_Move();
             CameraControl();
             Jump();
-
-            if (Input.GetKeyDown(KeyCode.E) && HasCorpse)
-            {
-                lastSpawnedCorpse = Instantiate(SpawnCorpse, transform.position + (transform.forward * 3), Quaternion.identity);
-                HasCorpse = false;
-                spawnPos = lastSpawnedCorpse.transform.position;
-            }
+            SetClone();
         }
         else
         {
@@ -116,6 +121,11 @@ public class Sc_PlayerController : Sc_Character
         if (Input.GetKeyDown(KeyCode.P))
         {
             Time.timeScale = 0;
+        }
+
+        if (Input.GetButtonDown("Cancel"))
+        {
+            Application.Quit();
         }
     }
 }

@@ -12,8 +12,12 @@ public class Sc_Gun : MonoBehaviour
     [SerializeField] LayerMask shootLayer;
     [SerializeField] float shootDelay = 0.1f;
     float timer;
+    Ray ray;
 
+    public bool detectInteract;
     [SerializeField] bool Auto;
+    [SerializeField] LayerMask interactLayer;
+    [SerializeField] GameObject useText;
     Animator anim => GetComponent<Animator>();
 
     private int currentAmmo;
@@ -35,7 +39,7 @@ public class Sc_Gun : MonoBehaviour
         timer += Time.deltaTime;
         if (Auto)
         {
-            bool holdingFire = Input.GetMouseButton(0);
+            bool holdingFire = Input.GetButton("Fire1");
             anim.SetBool("HoldingFire", holdingFire);
 
             if (holdingFire && timer > shootDelay)
@@ -46,7 +50,7 @@ public class Sc_Gun : MonoBehaviour
         }
         else
         {
-            if (Input.GetMouseButtonDown(0) && timer > shootDelay)
+            if (Input.GetButtonDown("Fire1") && timer > shootDelay)
             {
                 anim.SetTrigger("Shoot");
                 timer = 0;
@@ -56,7 +60,6 @@ public class Sc_Gun : MonoBehaviour
 
     public void Shoot()
     {
-        Ray ray = player.viewCam.ViewportPointToRay(new Vector3(0.5f, 0.5f, 0));
         bool find = Physics.Raycast(ray, out RaycastHit hit, shootRange, shootLayer);
         CurrentAmmo--;
         if (find)
@@ -86,8 +89,23 @@ public class Sc_Gun : MonoBehaviour
         }
     }
 
+    public void Interact()
+    {
+        detectInteract = Physics.Raycast(ray, out RaycastHit hit, 2, interactLayer);
+        useText.SetActive(detectInteract);
+        if (Input.GetButtonDown("Interact") && detectInteract)
+        {
+            Sc_Interactable obj = hit.collider.GetComponent<Sc_Interactable>();
+            if (obj && obj.canActivate)
+            {
+                obj.Activate(player);
+            }
+        }
+    }
+
     void Update()
     {
+        ray = player.viewCam.ViewportPointToRay(new Vector3(0.5f, 0.5f, 0));
         Vector2 vel = new Vector2(player.rb.velocity.x, player.rb.velocity.z).normalized;
         anim.SetFloat("Velocity", vel.sqrMagnitude);
 
@@ -95,5 +113,6 @@ public class Sc_Gun : MonoBehaviour
             return;
 
         Shooting();
+        Interact();
     }
 }

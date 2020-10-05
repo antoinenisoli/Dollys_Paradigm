@@ -75,22 +75,16 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6c8c00e718c4c734082bb087cbe2e439, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  hurtColor: {r: 1, g: 0, b: 0, a: 1}
   surface: {fileID: 0}
   playerLayer:
     serializedVersion: 2
     m_Bits: 512
-  aggroRadius: 40
+  aggroRadius: 50
   attackDelay: 1
   distanceToPlayer: 0
   closeDistance: 6
   timer: 0
   isClose: 0
-  detectBlock: 0
-  blockLayer:
-    serializedVersion: 2
-    m_Bits: 55
-  rayThickness: 2
   damage: 5
 --- !u!195 &8058594851265136321
 NavMeshAgent:
@@ -110,8 +104,8 @@ NavMeshAgent:
   m_AutoTraverseOffMeshLink: 0
   m_AutoBraking: 0
   m_AutoRepath: 1
-  m_Height: 4.38
-  m_BaseOffset: 2.63
+  m_Height: 3.01
+  m_BaseOffset: 3.17
   m_WalkableMask: 1
   m_ObstacleAvoidanceType: 4
 --- !u!65 &8058594851265136322

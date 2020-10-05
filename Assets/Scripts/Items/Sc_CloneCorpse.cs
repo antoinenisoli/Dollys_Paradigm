@@ -9,7 +9,7 @@ public class Sc_CloneCorpse : Sc_GameItem
         if (!chara.Health.isDead)
         {
             chara.GetComponent<Sc_PlayerController>().HasCorpse = true;
-            Destroy(gameObject);
+            Destroy(transform.root.gameObject);
         }
     }
 }

@@ -80,10 +80,10 @@ MonoBehaviour:
   playerLayer:
     serializedVersion: 2
     m_Bits: 512
-  aggroRadius: 40
+  aggroRadius: 50
   attackDelay: 2
   distanceToPlayer: 0
-  closeDistance: 22
+  closeDistance: 40
   timer: 0
   isClose: 0
   bullet: {fileID: 3501629727731142299, guid: 81e8b2ca063cbe2439fffcf7b2981430, type: 3}
@@ -104,7 +104,7 @@ NavMeshAgent:
   m_GameObject: {fileID: 2947349484296407073}
   m_Enabled: 1
   m_AgentTypeID: -1372625422
-  m_Radius: 1.6
+  m_Radius: 0.85
   m_Speed: 8
   m_Acceleration: 1000
   avoidancePriority: 50

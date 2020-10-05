@@ -22,7 +22,7 @@ public class Sc_Enemy_Melee : Sc_Enemy
             Vector3 playerPos = player.transform.position;
             distanceToPlayer = Vector3.Distance(transform.position, playerPos);
 
-            if (player.Health.isDead)
+            if (player.Health.isDead || agent.pathStatus == NavMeshPathStatus.PathPartial)
             {
                 agent.SetDestination(spawnPos);
                 agent.isStopped = false;

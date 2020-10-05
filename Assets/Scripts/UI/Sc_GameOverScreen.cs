@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class Sc_GameOverScreen : MonoBehaviour
 {
@@ -27,6 +28,6 @@ public class Sc_GameOverScreen : MonoBehaviour
 
     public void Leave()
     {
-        Application.Quit();
+        SceneManager.LoadScene(0);
     }
 }

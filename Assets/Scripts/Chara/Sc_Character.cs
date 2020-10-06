@@ -4,6 +4,7 @@ using UnityEngine;
 
 public class Sc_Character : MonoBehaviour
 {
+    protected Sc_GameManager manager => FindObjectOfType<Sc_GameManager>();
     public Sc_Health Health => GetComponent<Sc_Health>();
     protected bool hit;
     protected Vector3 spawnPos;
@@ -12,7 +13,6 @@ public class Sc_Character : MonoBehaviour
     {
         spawnPos = transform.position;
         Sc_EventManager.current.onGlobalRespawn += Respawn;
-        Respawn();
     }
 
     public virtual void Respawn()
@@ -29,11 +29,6 @@ public class Sc_Character : MonoBehaviour
             return;
 
         Health.TakeDamages(_dmg);
-        
-        if (_dmg > 0)
-            StartCoroutine(ChangeLifeColor(Color.red));
-        else
-            StartCoroutine(ChangeLifeColor(Color.green));
     }
 
     public virtual void Death()

@@ -8,7 +8,6 @@ public class Sc_PlayerController : Sc_Character
     public Camera viewCam => Camera.main;
     public Rigidbody rb => GetComponent<Rigidbody>();
     Sc_Gun myGun => FindObjectOfType<Sc_Gun>();
-    Light myLight;
 
     [Header("Clone corpse")]
     public bool HasCorpse;
@@ -16,7 +15,7 @@ public class Sc_PlayerController : Sc_Character
     [SerializeField] Image corpseIcon;
     [SerializeField] GameObject corpse;
     [SerializeField] GameObject SpawnCorpse;
-    GameObject lastSpawnedCorpse;
+    public GameObject lastSpawnedCorpse;
     GameObject lastDeadCorpse;
 
     [SerializeField] float moveSpeed = 800;
@@ -28,11 +27,25 @@ public class Sc_PlayerController : Sc_Character
     [SerializeField] LayerMask groundLayer;
     [SerializeField] float groundDist = 1f;
     bool detectedGround;
+    Light myLight;
+
+    [SerializeField] AudioSource deathSound;
+    [SerializeField] AudioSource healSound;
+    [SerializeField] AudioSource dropSound;
+    public AudioSource lootSound;
+    [SerializeField] AudioSource footstepSound;
 
     public override void Start()
     {
         base.Start();
+        Respawn();
         myLight = GetComponentInChildren<Light>();
+    }
+
+    public override void Respawn()
+    {
+        manager.roomIndex = manager.savedRoomIndex;
+        base.Respawn();
     }
 
     public override void Death()
@@ -43,6 +56,7 @@ public class Sc_PlayerController : Sc_Character
             lastDeadCorpse = null;
         }
 
+        deathSound.Play();
         lastDeadCorpse = Instantiate(corpse, transform.position + Vector3.up * 3f, Quaternion.identity);
         HasCorpse = false;
         if (lastSpawnedCorpse != null)
@@ -52,6 +66,21 @@ public class Sc_PlayerController : Sc_Character
         }
 
         Sc_EventManager.current.GameOverScreen();
+    }
+
+    public override void Hurt(int _dmg)
+    {
+        base.Hurt(_dmg);
+
+        if (_dmg > 0)
+        {
+            StartCoroutine(ChangeLifeColor(Color.red));
+        }
+        else
+        {
+            StartCoroutine(ChangeLifeColor(Color.green));
+            healSound.Play();
+        }
     }
 
     void FPS_Move()
@@ -110,7 +139,9 @@ public class Sc_PlayerController : Sc_Character
         {
             lastSpawnedCorpse = Instantiate(SpawnCorpse, transform.position + (transform.forward * 3), Quaternion.identity);
             HasCorpse = false;
+            dropSound.Play();
             spawnPos = lastSpawnedCorpse.transform.position;
+            manager.savedRoomIndex = manager.roomIndex;
         }
     }
 

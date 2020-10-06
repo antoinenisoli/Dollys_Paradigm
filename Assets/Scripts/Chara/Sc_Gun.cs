@@ -103,15 +103,25 @@ public class Sc_Gun : MonoBehaviour
 
     public void Interact()
     {
-        detectInteract = Physics.Raycast(ray, out RaycastHit hit, 2, interactLayer);
-        useText.SetActive(detectInteract);
-        if (Input.GetButtonDown("Interact") && detectInteract)
+        detectInteract = Physics.Raycast(ray, out RaycastHit hit, 5, interactLayer);
+        if (detectInteract)
         {
-            Sc_Interactable obj = hit.collider.GetComponent<Sc_Interactable>();
-            if (obj && obj.canActivate)
+            Sc_Interactable obj = hit.collider.GetComponent<Sc_Interactable>();            
+            if (obj)
             {
-                obj.Activate(player);
+                if (Input.GetButtonDown("Interact") && obj.canActivate)
+                    obj.Activate(player);
+
+                useText.SetActive(obj && obj.canActivate);
             }
+            else
+            {
+                useText.SetActive(false);
+            }
+        }
+        else
+        {
+            useText.SetActive(false);
         }
     }
 

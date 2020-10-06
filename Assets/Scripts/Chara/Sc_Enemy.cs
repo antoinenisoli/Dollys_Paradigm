@@ -47,7 +47,7 @@ public class Sc_Enemy : Sc_Character
 
     public virtual void Detect()
     {
-        if (player != null && (enemies.Length <= 0 || player.Health.isDead))
+        if (player != null && player.Health.isDead)
             player = null;
 
         foreach (Collider col in enemies)
@@ -57,12 +57,6 @@ public class Sc_Enemy : Sc_Character
             {
                 player = _player;
             }
-        }
-
-        if (Health.isDead)
-        {
-            agent.isStopped = true;
-            return;
         }
     }
 
@@ -93,6 +87,9 @@ public class Sc_Enemy : Sc_Character
         anim.SetBool("isDead", Health.isDead);
         isClose = distanceToPlayer < closeDistance;
         Detect();
+
+        if (Health.isDead)
+            agent.isStopped = true;
 
         if (player != null && player.Health.isDead)
             return;

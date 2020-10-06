@@ -6,9 +6,11 @@ public class Sc_CloneCorpse : Sc_GameItem
 {
     public override void Effect(Sc_Character chara)
     {
-        if (!chara.Health.isDead)
+        Sc_PlayerController player = chara.GetComponent<Sc_PlayerController>();
+        if (!player.Health.isDead)
         {
-            chara.GetComponent<Sc_PlayerController>().HasCorpse = true;
+            player.HasCorpse = true;
+            player.lootSound.Play();
             Destroy(transform.root.gameObject);
         }
     }

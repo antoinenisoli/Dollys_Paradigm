@@ -2,16 +2,17 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Sc_LevelSpawn : MonoBehaviour
+public class Sc_LevelManager : MonoBehaviour
 {
-    [SerializeField] List<Sc_Interactable> interactables;
+    public Sc_Door mainDoor;
+    public Sc_DoorSpawn roomSpawn;
     [SerializeField] List<Sc_Enemy> enemies;
-    [SerializeField] LayerMask detect;
+    [SerializeField] LayerMask detect = 1 >> 8;
     [SerializeField] Vector3 offSet;
     Vector3 detectArea;
     [SerializeField] float detectRadius = 40;
 
-    public void OnDrawGizmosSelected()
+    private void OnDrawGizmos()
     {
         detectArea = transform.position + offSet;
         Gizmos.color = Color.red;
@@ -25,10 +26,16 @@ public class Sc_LevelSpawn : MonoBehaviour
 
         foreach (Collider col in scan)
         {
-            Sc_Interactable inte = col.gameObject.GetComponent<Sc_Interactable>();
-            if (inte && !interactables.Contains(inte))
+            Sc_Door door = col.gameObject.GetComponent<Sc_Door>();
+            if (mainDoor == null)
             {
-                interactables.Add(inte);
+                mainDoor = door;
+            }
+
+            Sc_DoorSpawn spawn = col.gameObject.GetComponent<Sc_DoorSpawn>();
+            if (roomSpawn == null)
+            {
+                roomSpawn = spawn;
             }
 
             Sc_Enemy enemy = col.gameObject.GetComponentInParent<Sc_Enemy>();
@@ -37,6 +44,22 @@ public class Sc_LevelSpawn : MonoBehaviour
                 enemies.Add(enemy);
             }
         }
+    }
+
+    public void LevelReset()
+    {
+        foreach (Sc_Enemy mob in enemies)
+        {
+            mob.gameObject.SetActive(true);
+            mob.Respawn();
+        }
+
+        mainDoor.canActivate = false;
+    }
+
+    private void OnEnable()
+    {
+        LevelReset();
     }
 
     private void Update()
@@ -50,13 +73,9 @@ public class Sc_LevelSpawn : MonoBehaviour
             }
         }
 
-        for (int i = 0; i < interactables.Count; i++)
+        if (enemies.Count == 0 && !mainDoor.canActivate)
         {
-            if (enemies.Count == 0)
-            {
-                interactables[i].canActivate = true;
-                break;
-            }
+            mainDoor.Open();
         }
     }
 }

@@ -9,15 +9,19 @@ public class Sc_Character : MonoBehaviour
     protected bool hit;
     protected Vector3 spawnPos;
 
-    public virtual void Start()
+    public virtual void Awake()
     {
         spawnPos = transform.position;
+
+    }
+
+    public virtual void Start()
+    {
         Sc_EventManager.current.onGlobalRespawn += Respawn;
     }
 
     public virtual void Respawn()
     {
-        print(gameObject.name + " respawn");
         Health.CurrentHealth = Health.MaxHealth;
         transform.position = spawnPos;
         Health.isDead = false;

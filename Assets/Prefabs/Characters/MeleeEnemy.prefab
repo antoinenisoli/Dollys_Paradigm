@@ -1,5 +1,36 @@
 %YAML 1.1
 %TAG !u! tag:unity3d.com,2011:
+--- !u!1 &6828306647188185
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 2142769807672686520}
+  m_Layer: 8
+  m_Name: Audio
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &2142769807672686520
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6828306647188185}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children:
+  - {fileID: 7002617964701899209}
+  m_Father: {fileID: 8058594851265136323}
+  m_RootOrder: 1
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &8058594851265136332
 GameObject:
   m_ObjectHideFlags: 0
@@ -17,7 +48,7 @@ GameObject:
   m_Layer: 8
   m_Name: MeleeEnemy
   m_TagString: Untagged
-  m_Icon: {fileID: 0}
+  m_Icon: {fileID: -1412012063857583412, guid: 0000000000000000d000000000000000, type: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
@@ -33,7 +64,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 8058594851968268453}
-  - {fileID: 7002617964701899209}
+  - {fileID: 2142769807672686520}
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: -31.344002, z: 0}
@@ -80,14 +111,14 @@ MonoBehaviour:
   playerLayer:
     serializedVersion: 2
     m_Bits: 512
-  aggroRadius: 50
+  aggroRadius: 80
   attackDelay: 1
   distanceToPlayer: 0
   closeDistance: 6
   timer: 0
   isClose: 0
   attackSound: {fileID: 958655162270541273}
-  damage: 5
+  damage: 10
 --- !u!195 &8058594851265136321
 NavMeshAgent:
   m_ObjectHideFlags: 0
@@ -97,8 +128,8 @@ NavMeshAgent:
   m_GameObject: {fileID: 8058594851265136332}
   m_Enabled: 1
   m_AgentTypeID: -334000983
-  m_Radius: 1.53
-  m_Speed: 9
+  m_Radius: 2.16
+  m_Speed: 18
   m_Acceleration: 1000
   avoidancePriority: 50
   m_AngularSpeed: 1000
@@ -168,6 +199,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: dace83112d20efe4c94d2fd7951e01ad, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  explosionSound: {fileID: 8985331033461368869, guid: f195e191b4abeb9449d6fed16ceb4204,
+    type: 3}
 --- !u!212 &8058594851968268475
 SpriteRenderer:
   m_ObjectHideFlags: 0
@@ -261,12 +294,12 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 8358783184156185630}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
-  m_Father: {fileID: 8058594851265136323}
-  m_RootOrder: 1
+  m_Father: {fileID: 2142769807672686520}
+  m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!82 &958655162270541273
 AudioSource:

@@ -5,6 +5,7 @@ using UnityEngine.AI;
 
 public class Sc_Enemy_Shooter : Sc_Enemy
 {
+    [Header("Shooter enemy")]
     [SerializeField] GameObject bullet;
     [SerializeField] Transform shootPos;
     [SerializeField] float bulletSpeed;

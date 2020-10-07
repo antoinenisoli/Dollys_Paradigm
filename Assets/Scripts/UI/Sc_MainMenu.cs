@@ -13,6 +13,7 @@ public class Sc_MainMenu : MonoBehaviour
     private void Awake()
     {
         HideAll();
+        Time.timeScale = 1;
     }
 
     void HideAll()

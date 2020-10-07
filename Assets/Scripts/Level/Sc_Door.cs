@@ -5,8 +5,15 @@ using UnityEngine;
 public class Sc_Door : Sc_Interactable
 {
     Sc_GameManager manager => FindObjectOfType<Sc_GameManager>();
+    public MeshOutline outline => GetComponentInChildren<MeshOutline>();
     Animator anim => GetComponent<Animator>();
+
     public Sc_DoorSpawn destination;
+
+    private void Awake()
+    {
+        outline.enabled = false;
+    }
 
     public override void Activate(Sc_Character chara)
     {
@@ -16,9 +23,15 @@ public class Sc_Door : Sc_Interactable
         chara.transform.rotation = Quaternion.Euler(new Vector3(0, destination.spawnPos.rotation.eulerAngles.y, 0));
     }
 
-    public override void Open()
+    public override void Open(float delay)
     {
-        base.Open();
+        base.Open(delay);
+        StartCoroutine(LaunchOpen(delay));
+    }
+
+    IEnumerator LaunchOpen(float delay)
+    {
+        yield return new WaitForSeconds(delay);
         anim.SetBool("CanActivate", canActivate);
         anim.SetTrigger("Open");
     }

@@ -4,39 +4,53 @@ using UnityEngine;
 
 public class Sc_GameManager : MonoBehaviour
 {
-    Sc_PlayerController player => FindObjectOfType<Sc_PlayerController>();
-    [SerializeField] Sc_LevelManager[] levels;
+    [SerializeField] List<Sc_LevelManager> levels;
+    [SerializeField] PhysicMaterial physicMat;
     public int roomIndex;
     public int savedRoomIndex;
 
-    public void IncreaseIndex()
+    private void Awake()
     {
-        roomIndex++;
-
-        if (roomIndex > levels.Length - 1)
+        Collider[] colliders = FindObjectsOfType<Collider>();
+        foreach (Collider col in colliders)
         {
-            roomIndex = 0;
+            col.material = physicMat;
+
+            if (col.GetComponent<MeshCollider>())
+            {
+                col.GetComponent<MeshCollider>().convex = true;
+            }
         }
     }
 
     private void Start()
     {
-        for (int i = 0; i < levels.Length - 1; i++)
+        for (int i = 0; i < levels.Count - 1; i++)
         {
             if (levels[i] != null && levels[i + 1] != null)
             {
-                levels[i].mainDoor.destination = levels[i + 1].roomSpawn;
+                levels[i].data.mainDoor.destination = levels[i + 1].data.roomSpawn;
             }
         }
 
-        levels[levels.Length - 1].mainDoor.destination = levels[0].roomSpawn;
+        levels[levels.Count - 1].data.mainDoor.destination = levels[0].data.roomSpawn;
+    }
+
+    public void IncreaseIndex()
+    {
+        roomIndex++;
+
+        if (roomIndex > levels.Count - 1)
+        {
+            roomIndex = 0;
+        }
     }
 
     private void Update()
     {
-        for (int i = 0; i < levels.Length; i++)
+        for (int i = 0; i < levels.Count; i++)
         {
-            levels[i].gameObject.SetActive(i == roomIndex);
+            levels[i].gameObject.SetActive(i == roomIndex);           
         }
     }
 }

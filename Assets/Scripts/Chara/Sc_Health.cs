@@ -30,14 +30,11 @@ public class Sc_Health : MonoBehaviour
         {
             if (value <= 0)
             {
+                value = 0;
                 if (!isDead)
                 {
                     isDead = true;
                     chara.Death();
-                }
-                else
-                {
-                    value = 0;
                 }
             }
 

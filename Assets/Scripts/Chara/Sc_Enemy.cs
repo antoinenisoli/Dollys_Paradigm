@@ -10,14 +10,17 @@ public class Sc_Enemy : Sc_Character
     protected SpriteRenderer spr => GetComponentInChildren<SpriteRenderer>();
     protected NavMeshAgent agent => GetComponent<NavMeshAgent>();
 
+    [Header("Enemy")]
     public NavMeshSurface surface;
     protected Material mat;
 
+    [Header("Detect player")]
     [SerializeField] protected LayerMask playerLayer;
     [SerializeField] protected float aggroRadius = 5;
     protected Collider[] enemies;
     protected Sc_PlayerController player;
 
+    [Header("Fight")]
     [SerializeField] protected float attackDelay = 1.5f;
     [SerializeField] protected float distanceToPlayer;
     [SerializeField] protected float closeDistance;
@@ -25,16 +28,17 @@ public class Sc_Enemy : Sc_Character
     [SerializeField] protected bool isClose;
     [SerializeField] AudioSource attackSound;
 
-    public virtual void Awake()
+    public override void Awake()
     {
         surface.BuildNavMesh();
         mat = spr.material;
         mat.DisableKeyword("_EMISSION");
+        base.Awake();
     }
 
     public virtual void OnDrawGizmosSelected()
     {
-        Gizmos.color = Color.red;
+        Gizmos.color = Color.green;
         Gizmos.DrawWireSphere(transform.position, aggroRadius);
     }
 
@@ -43,6 +47,12 @@ public class Sc_Enemy : Sc_Character
         mat.EnableKeyword("_EMISSION");
         yield return new WaitForSeconds(0.15f);
         mat.DisableKeyword("_EMISSION");
+    }
+
+    public override void Hurt(int _dmg)
+    {
+        base.Hurt(_dmg);
+        StartCoroutine(ChangeLifeColor(Color.white));
     }
 
     public virtual void Detect()
@@ -85,7 +95,7 @@ public class Sc_Enemy : Sc_Character
     public virtual void Update()
     {
         anim.SetBool("isDead", Health.isDead);
-        isClose = distanceToPlayer < closeDistance;
+        isClose = distanceToPlayer < closeDistance && player != null;
         Detect();
 
         if (Health.isDead)

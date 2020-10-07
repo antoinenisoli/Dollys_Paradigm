@@ -17,7 +17,7 @@ GameObject:
   m_Layer: 8
   m_Name: ShooterEnemy
   m_TagString: Untagged
-  m_Icon: {fileID: 0}
+  m_Icon: {fileID: 3936346786652291628, guid: 0000000000000000d000000000000000, type: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
@@ -81,16 +81,16 @@ MonoBehaviour:
   playerLayer:
     serializedVersion: 2
     m_Bits: 512
-  aggroRadius: 50
-  attackDelay: 2
+  aggroRadius: 55
+  attackDelay: 1.3
   distanceToPlayer: 0
-  closeDistance: 40
+  closeDistance: 50
   timer: 0
   isClose: 0
   attackSound: {fileID: 1585705665960932466}
   bullet: {fileID: 3501629727731142299, guid: 81e8b2ca063cbe2439fffcf7b2981430, type: 3}
   shootPos: {fileID: 2947349485011530328}
-  bulletSpeed: 26
+  bulletSpeed: 30
   detectBlock: 0
   obj: {fileID: 0}
   blockLayer:
@@ -207,6 +207,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: dace83112d20efe4c94d2fd7951e01ad, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  explosionSound: {fileID: 8985331033461368869, guid: f195e191b4abeb9449d6fed16ceb4204,
+    type: 3}
 --- !u!212 &2947349486168970754
 SpriteRenderer:
   m_ObjectHideFlags: 0

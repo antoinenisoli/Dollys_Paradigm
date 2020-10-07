@@ -11,29 +11,37 @@ public class Sc_PlayerController : Sc_Character
 
     [Header("Clone corpse")]
     public bool HasCorpse;
+    [SerializeField] GameObject pauseScreen;
     [SerializeField] Image hitScreen;
     [SerializeField] Image corpseIcon;
     [SerializeField] GameObject corpse;
     [SerializeField] GameObject SpawnCorpse;
-    public GameObject lastSpawnedCorpse;
+    [HideInInspector] public GameObject lastSpawnedCorpse;
     GameObject lastDeadCorpse;
 
+    [Header("Movements")]
     [SerializeField] float moveSpeed = 800;
-    [SerializeField] float jumpForce = 5;
     [SerializeField] float camSensitivity = 150;
     [SerializeField] float camBounds = 40;
     float rotY;
 
+    [Header("Jump")]
+    [SerializeField] float jumpForce = 5;
     [SerializeField] LayerMask groundLayer;
     [SerializeField] float groundDist = 1f;
-    bool detectedGround;
+    [SerializeField] bool detectedGround;
+    RaycastHit rayHit;
     Light myLight;
 
+    [Header("Audio")]
+    [SerializeField] AudioSource walkSound;
+    [SerializeField] AudioSource hitSound;
     [SerializeField] AudioSource deathSound;
     [SerializeField] AudioSource healSound;
     [SerializeField] AudioSource dropSound;
     public AudioSource lootSound;
     [SerializeField] AudioSource footstepSound;
+    float walkDelay;
 
     public override void Start()
     {
@@ -48,6 +56,13 @@ public class Sc_PlayerController : Sc_Character
         base.Respawn();
     }
 
+    public void WalkSound()
+    {
+        walkSound.pitch = Random.Range(0.8f, 1.2f);
+        walkSound.Play();
+        walkDelay = 0;
+    }
+
     public override void Death()
     {
         if (lastDeadCorpse != null)
@@ -57,7 +72,7 @@ public class Sc_PlayerController : Sc_Character
         }
 
         deathSound.Play();
-        lastDeadCorpse = Instantiate(corpse, transform.position + Vector3.up * 3f, Quaternion.identity);
+        lastDeadCorpse = Instantiate(corpse, rayHit.point + Vector3.up * 2, Quaternion.identity);
         HasCorpse = false;
         if (lastSpawnedCorpse != null)
         {
@@ -75,6 +90,7 @@ public class Sc_PlayerController : Sc_Character
         if (_dmg > 0)
         {
             StartCoroutine(ChangeLifeColor(Color.red));
+            hitSound.Play();
         }
         else
         {
@@ -90,7 +106,14 @@ public class Sc_PlayerController : Sc_Character
         Vector3 normalized = (horizontalAxis + verticalAxis).normalized;
 
         Vector3 move = normalized * moveSpeed;
+        move.y = 0;
         rb.velocity = new Vector3(move.x, rb.velocity.y, move.z);
+
+        walkDelay += Time.deltaTime;
+        if (move.sqrMagnitude > 0 && detectedGround && walkDelay > 0.5f)
+        {
+            WalkSound();
+        }
     }
 
     void CameraControl()
@@ -130,31 +153,27 @@ public class Sc_PlayerController : Sc_Character
 
     private void FixedUpdate()
     {
-        detectedGround = Physics.Raycast(transform.position, Vector3.down, groundDist);
+        detectedGround = Physics.Raycast(transform.position, Vector3.down, out rayHit, groundDist);
     }
 
     void SetClone()
     {
-        if (Input.GetButtonDown("Interact") && HasCorpse && !myGun.detectInteract)
+        if (Input.GetButtonDown("Interact") && HasCorpse && !myGun.detectInteract && detectedGround)
         {
-            lastSpawnedCorpse = Instantiate(SpawnCorpse, transform.position + (transform.forward * 3), Quaternion.identity);
+            lastSpawnedCorpse = Instantiate(SpawnCorpse, rayHit.point + rayHit.normal + (transform.forward * 3.5f), Quaternion.identity);
             HasCorpse = false;
             dropSound.Play();
-            spawnPos = lastSpawnedCorpse.transform.position;
+            spawnPos = lastSpawnedCorpse.transform.position + Vector3.up * 2;
             manager.savedRoomIndex = manager.roomIndex;
         }
     }
 
     void UseInputs()
     {
-        if (Input.GetKeyDown(KeyCode.P))
-        {
-            Time.timeScale = 0;
-        }
-
         if (Input.GetButtonDown("Cancel"))
         {
-            Application.Quit();
+            Time.timeScale = Time.timeScale == 1 ? 0 : 1;
+            pauseScreen.SetActive(Time.timeScale == 0);
         }
 
         if (Input.GetButtonDown("Torch"))

@@ -1,29 +1,38 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class Sc_Gun : MonoBehaviour
 {
     Sc_PlayerController player => FindObjectOfType<Sc_PlayerController>();
     Animator anim => GetComponent<Animator>();
 
-    AudioSource sound => GetComponentInChildren<AudioSource>();
+    [SerializeField] AudioSource shootSound;
+    [SerializeField] AnimationClip clip;
+    
+    [Header("Shooting")]
     [SerializeField] int damage = 5;
     [SerializeField] float shootRange = 50;
     [SerializeField] GameObject[] shootFX;
-    [SerializeField] AnimationClip clip;
     [SerializeField] LayerMask shootLayer;
     [SerializeField] float shootDelay = 0.1f;
     float timer;
     Ray ray;
 
+    [Header("Interactions")]
     public bool detectInteract;
     [SerializeField] bool Auto;
     [SerializeField] LayerMask interactLayer;
     [SerializeField] GameObject useText;
+    Sc_Door door;
 
-    private int currentAmmo;
-    public int CurrentAmmo 
+    [Header("Ammos")]
+    [SerializeField] Slider ammoSlider;
+    [SerializeField] float recuperationDelay = 0.25f;
+    float currentAmmo;
+    [SerializeField] float maxAmmo = 100;
+    public float CurrentAmmo 
     { 
         get => currentAmmo;
 
@@ -32,8 +41,16 @@ public class Sc_Gun : MonoBehaviour
             if (value < 0)
                 value = 0;
 
+            if (value > maxAmmo)
+                value = maxAmmo;
+
             currentAmmo = value;
         }
+    }
+
+    private void Start()
+    {
+        CurrentAmmo = maxAmmo;
     }
 
     void Shooting()
@@ -41,13 +58,13 @@ public class Sc_Gun : MonoBehaviour
         timer += Time.deltaTime;
         if (Auto)
         {
-            bool holdingFire = Input.GetButton("Fire1");
+            bool holdingFire = Input.GetButton("Fire1") && CurrentAmmo > 0;
             anim.SetBool("HoldingFire", holdingFire);
 
-            if (holdingFire)
+            if (holdingFire && CurrentAmmo > 0)
             {
-                if (!sound.isPlaying)
-                    sound.Play();
+                if (!shootSound.isPlaying)
+                    shootSound.Play();
 
                 if (timer > shootDelay)
                 {
@@ -57,7 +74,7 @@ public class Sc_Gun : MonoBehaviour
             }
             else
             {
-                sound.Stop();
+                shootSound.Stop();
             }
         }
         else
@@ -106,27 +123,40 @@ public class Sc_Gun : MonoBehaviour
         detectInteract = Physics.Raycast(ray, out RaycastHit hit, 5, interactLayer);
         if (detectInteract)
         {
-            Sc_Interactable obj = hit.collider.GetComponent<Sc_Interactable>();            
+            Sc_Door obj = hit.collider.GetComponent<Sc_Door>();            
             if (obj)
             {
                 if (Input.GetButtonDown("Interact") && obj.canActivate)
                     obj.Activate(player);
 
+                door = obj;
                 useText.SetActive(obj && obj.canActivate);
+                door.outline.enabled = obj && obj.canActivate;
             }
             else
             {
                 useText.SetActive(false);
+
+                if (door != null)
+                    door.outline.enabled = false;
             }
         }
         else
         {
             useText.SetActive(false);
+
+            if (door != null)
+                door.outline.enabled = false;
         }
     }
 
     void Update()
     {
+        ammoSlider.value = CurrentAmmo;
+        ammoSlider.maxValue = maxAmmo;
+        if (!Input.GetButton("Fire1") && Time.timeScale > 0)
+            CurrentAmmo += recuperationDelay;
+
         ray = player.viewCam.ViewportPointToRay(new Vector3(0.5f, 0.5f, 0));
         Vector2 vel = new Vector2(player.rb.velocity.x, player.rb.velocity.z).normalized;
         anim.SetFloat("Velocity", vel.sqrMagnitude);

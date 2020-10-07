@@ -7,7 +7,7 @@ public class Sc_Interactable : MonoBehaviour
     public bool canActivate;
     protected bool activated;
 
-    public virtual void Open()
+    public virtual void Open(float delay)
     {
         canActivate = true;
     }

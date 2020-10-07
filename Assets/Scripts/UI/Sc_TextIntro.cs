@@ -5,15 +5,16 @@ using UnityEngine;
 
 public class Sc_TextIntro : MonoBehaviour
 {
+    TextMeshPro txtMesh => GetComponent<TextMeshPro>();
+
     [SerializeField] float printSpeed;
     [SerializeField] float printDelay;
 
     [TextArea]
     [SerializeField] string[] lines;
     string currentLine;
-    TextMeshPro txtMesh => GetComponent<TextMeshPro>();
 
-    private void Start()
+    public void OnEnable()
     {
         StartCoroutine(PrintLine());
     }

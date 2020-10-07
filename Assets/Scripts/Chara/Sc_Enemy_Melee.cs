@@ -5,6 +5,7 @@ using UnityEngine.AI;
 
 public class Sc_Enemy_Melee : Sc_Enemy
 {
+    [Header("Melee")]
     [SerializeField] int damage = 5;
 
     public override void Awake()
@@ -42,20 +43,16 @@ public class Sc_Enemy_Melee : Sc_Enemy
     public override void Fight()
     {
         base.Fight();
+        timer += Time.deltaTime;
 
         if (isClose)
         {
-            timer += Time.deltaTime;
 
             if (player != null && timer > attackDelay)
             {
                 timer = 0;
                 anim.SetTrigger("Attack");
             }
-        }
-        else
-        {
-            timer = 0;
         }
     }
 
@@ -68,7 +65,7 @@ public class Sc_Enemy_Melee : Sc_Enemy
     public override void Update()
     {
         Vector2 vel = agent.velocity.normalized;
-        anim.SetFloat("Velocity", vel.sqrMagnitude);
+        anim.SetFloat("Velocity", vel.magnitude);
         base.Update();       
     }
 }

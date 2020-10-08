@@ -25,15 +25,18 @@ public class Sc_GameManager : MonoBehaviour
 
     private void Start()
     {
-        for (int i = 0; i < levels.Count - 1; i++)
+        if (levels.Count > 0)
         {
-            if (levels[i] != null && levels[i + 1] != null)
+            for (int i = 0; i < levels.Count - 1; i++)
             {
-                levels[i].data.mainDoor.destination = levels[i + 1].data.roomSpawn;
+                if (levels[i] != null && levels[i + 1] != null)
+                {
+                    levels[i].data.mainDoor.destination = levels[i + 1].data.roomSpawn;
+                }
             }
-        }
 
-        levels[levels.Count - 1].data.mainDoor.destination = levels[0].data.roomSpawn;
+            levels[levels.Count - 1].data.mainDoor.destination = levels[0].data.roomSpawn;
+        }
     }
 
     public void IncreaseIndex()

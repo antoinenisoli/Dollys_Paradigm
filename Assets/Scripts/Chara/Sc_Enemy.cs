@@ -34,6 +34,7 @@ public class Sc_Enemy : Sc_Character
         mat = spr.material;
         mat.DisableKeyword("_EMISSION");
         base.Awake();
+        Respawn();
     }
 
     public virtual void OnDrawGizmosSelected()

@@ -19,14 +19,25 @@ public class Sc_Door : Sc_Interactable
     {
         base.Activate(chara);
         manager.IncreaseIndex();
+        manager.SwitchRooms();
         chara.transform.position = destination.spawnPos.position;
         chara.transform.rotation = Quaternion.Euler(new Vector3(0, destination.spawnPos.rotation.eulerAngles.y, 0));
+
+        foreach (Sc_LevelManager level in manager.levels)
+        {
+            level.LevelReset();
+        }
     }
 
     public override void Open(float delay)
     {
         base.Open(delay);
         StartCoroutine(LaunchOpen(delay));
+    }
+
+    public void SwitchDoor()
+    {
+        canActivate = true;
     }
 
     IEnumerator LaunchOpen(float delay)

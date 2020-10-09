@@ -15,12 +15,6 @@ public class Sc_Enemy_Shooter : Sc_Enemy
     [SerializeField] protected LayerMask blockLayer;
     [SerializeField] protected float rayThickness = 2;
 
-    public override void Awake()
-    {
-        surface = GameObject.Find("NavMeshSurface_Shooter").GetComponent<NavMeshSurface>();
-        base.Awake();
-    }
-
     public override void OnDrawGizmosSelected()
     {
         base.OnDrawGizmosSelected();

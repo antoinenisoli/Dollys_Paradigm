@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.AI;
 using UnityEngine.UI;
 
 public class Sc_PlayerController : Sc_Character
@@ -17,7 +18,8 @@ public class Sc_PlayerController : Sc_Character
     [SerializeField] GameObject corpse;
     [SerializeField] GameObject SpawnCorpse;
     [HideInInspector] public GameObject lastSpawnedCorpse;
-    GameObject lastDeadCorpse;
+    [SerializeField] GameObject lastDeadCorpse;
+    [SerializeField] bool onLava;
 
     [Header("Movements")]
     [SerializeField] float moveSpeed = 800;
@@ -50,12 +52,6 @@ public class Sc_PlayerController : Sc_Character
         myLight = GetComponentInChildren<Light>();
     }
 
-    public override void Respawn()
-    {
-        manager.roomIndex = manager.savedRoomIndex;
-        base.Respawn();
-    }
-
     public void WalkSound()
     {
         walkSound.pitch = Random.Range(0.8f, 1.2f);
@@ -63,16 +59,54 @@ public class Sc_PlayerController : Sc_Character
         walkDelay = 0;
     }
 
+    void FindSafePlace(Vector3 offSet, List<RaycastHit> hits)
+    {
+        _ = Physics.Raycast(transform.position + offSet, -transform.up, out RaycastHit hit, groundDist*2, groundLayer);
+        hits.Add(hit);
+    }
+
     public override void Death()
     {
+        manager.roomIndex = manager.savedRoomIndex;
         if (lastDeadCorpse != null)
         {
             Destroy(lastDeadCorpse);
             lastDeadCorpse = null;
         }
 
+        if (onLava)
+        {
+            bool findPlace = false;
+            RaycastHit newHit = new RaycastHit();
+            List<RaycastHit> allHits = new List<RaycastHit>();
+            float set = 5;
+            FindSafePlace(new Vector3(1 * set, 2), allHits);
+            FindSafePlace(new Vector3(-1 * set, 2), allHits);
+            FindSafePlace(new Vector3(0, 2, 1 * set), allHits);
+            FindSafePlace(new Vector3(0, 2, -1 * set), allHits);
+
+            foreach (RaycastHit safePos in allHits)
+            {
+                if (safePos.collider != null)
+                {
+                    findPlace = true;
+                    newHit = safePos;
+                    print(safePos.collider.gameObject + "/" + safePos.point);
+                    break;
+                }
+            }
+
+            if (findPlace)
+                lastDeadCorpse = Instantiate(corpse, newHit.point + Vector3.up * 2, Quaternion.identity);
+            else
+                lastDeadCorpse = Instantiate(corpse, rayHit.point + Vector3.up * 2, Quaternion.identity);
+        }
+        else
+        {
+            lastDeadCorpse = Instantiate(corpse, rayHit.point + Vector3.up * 2, Quaternion.identity);
+        }
+
         deathSound.Play();
-        lastDeadCorpse = Instantiate(corpse, rayHit.point + Vector3.up * 2, Quaternion.identity);
         HasCorpse = false;
         if (lastSpawnedCorpse != null)
         {
@@ -133,9 +167,18 @@ public class Sc_PlayerController : Sc_Character
 
     void Jump()
     {
-        if (detectedGround && Input.GetButtonDown("Jump"))
+        if (detectedGround)
         {
-            rb.AddForce(Vector3.up * jumpForce, ForceMode.Impulse);
+            onLava = rayHit.collider.GetComponent<Sc_Lava>();
+
+            if (Input.GetButtonDown("Jump"))
+            {
+                rb.AddForce(Vector3.up * jumpForce, ForceMode.Impulse);
+            }
+        }
+        else
+        {
+            onLava = false;
         }
     }
 

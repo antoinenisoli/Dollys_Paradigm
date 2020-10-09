@@ -11,8 +11,8 @@ public class Sc_Character : MonoBehaviour
 
     public virtual void Awake()
     {
+        manager.ActiveSurfaces();
         spawnPos = transform.position;
-
     }
 
     public virtual void Start()

@@ -58,7 +58,7 @@ public class Sc_Gun : MonoBehaviour
         timer += Time.deltaTime;
         if (Auto)
         {
-            bool holdingFire = Input.GetButton("Fire1") && CurrentAmmo > 0;
+            bool holdingFire = Input.GetButton("Fire1") && CurrentAmmo > 0 && !player.Health.isDead;
             anim.SetBool("HoldingFire", holdingFire);
 
             if (holdingFire && CurrentAmmo > 0)

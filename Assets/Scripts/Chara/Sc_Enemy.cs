@@ -11,14 +11,13 @@ public class Sc_Enemy : Sc_Character
     protected NavMeshAgent agent => GetComponent<NavMeshAgent>();
 
     [Header("Enemy")]
-    public NavMeshSurface surface;
     protected Material mat;
 
     [Header("Detect player")]
     [SerializeField] protected LayerMask playerLayer;
     [SerializeField] protected float aggroRadius = 5;
     protected Collider[] enemies;
-    protected Sc_PlayerController player;
+     public Sc_PlayerController player;
 
     [Header("Fight")]
     [SerializeField] protected float attackDelay = 1.5f;
@@ -30,11 +29,9 @@ public class Sc_Enemy : Sc_Character
 
     public override void Awake()
     {
-        surface.BuildNavMesh();
+        base.Awake();
         mat = spr.material;
         mat.DisableKeyword("_EMISSION");
-        base.Awake();
-        Respawn();
     }
 
     public virtual void OnDrawGizmosSelected()
@@ -58,7 +55,7 @@ public class Sc_Enemy : Sc_Character
 
     public virtual void Detect()
     {
-        if (player != null && player.Health.isDead)
+        if ((player != null && player.Health.isDead) || Health.isDead)
             player = null;
 
         foreach (Collider col in enemies)
@@ -79,6 +76,7 @@ public class Sc_Enemy : Sc_Character
     public override void Death()
     {
         anim.SetTrigger("Death");
+        player = null;
     }
 
     public virtual void Fight()

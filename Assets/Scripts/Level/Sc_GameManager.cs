@@ -1,10 +1,13 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.AI;
 
 public class Sc_GameManager : MonoBehaviour
 {
-    [SerializeField] List<Sc_LevelManager> levels;
+    NavMeshSurface[] surfaces => FindObjectsOfType<NavMeshSurface>();
+
+    public List<Sc_LevelManager> levels;
     [SerializeField] PhysicMaterial physicMat;
     public int roomIndex;
     public int savedRoomIndex;
@@ -25,6 +28,7 @@ public class Sc_GameManager : MonoBehaviour
 
     private void Start()
     {
+        Sc_EventManager.current.onGlobalRespawn += SwitchRooms;
         if (levels.Count > 0)
         {
             for (int i = 0; i < levels.Count - 1; i++)
@@ -36,6 +40,16 @@ public class Sc_GameManager : MonoBehaviour
             }
 
             levels[levels.Count - 1].data.mainDoor.destination = levels[0].data.roomSpawn;
+        }
+
+        SwitchRooms();
+    }
+
+    public void ActiveSurfaces()
+    {
+        foreach (NavMeshSurface surface in surfaces)
+        {
+            surface.BuildNavMesh();
         }
     }
 
@@ -49,11 +63,11 @@ public class Sc_GameManager : MonoBehaviour
         }
     }
 
-    private void Update()
+    public void SwitchRooms()
     {
         for (int i = 0; i < levels.Count; i++)
         {
-            levels[i].gameObject.SetActive(i == roomIndex);           
+            levels[i].gameObject.SetActive(i == roomIndex);
         }
     }
 }

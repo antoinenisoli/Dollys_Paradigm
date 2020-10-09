@@ -3018,7 +3018,7 @@ MonoBehaviour:
 
     - Press SPACE to jump
 
-    - Press F to to turn off/on you torch light'
+    - Press F to to turn off/on you flashlight'
 --- !u!222 &2121286482
 CanvasRenderer:
   m_ObjectHideFlags: 0

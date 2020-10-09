@@ -9,7 +9,7 @@ public class Sc_Interactable : MonoBehaviour
 
     public virtual void Open(float delay)
     {
-        canActivate = true;
+        
     }
 
     public virtual void Activate(Sc_Character chara)

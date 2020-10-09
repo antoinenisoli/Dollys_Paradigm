@@ -8,12 +8,6 @@ public class Sc_Enemy_Melee : Sc_Enemy
     [Header("Melee")]
     [SerializeField] int damage = 5;
 
-    public override void Awake()
-    {
-        surface = GameObject.Find("NavMeshSurface_Melee").GetComponent<NavMeshSurface>();
-        base.Awake();
-    }
-
     public override void Detect()
     {
         base.Detect();

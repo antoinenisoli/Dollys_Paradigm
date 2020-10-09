@@ -42,9 +42,9 @@ public class Sc_LevelManager : MonoBehaviour
         }
     }
 
-    private void OnEnable()
+    private void Awake()
     {
-        LevelReset();
+        GetRoomData();
     }
 
     public void GetRoomData()
@@ -83,6 +83,7 @@ public class Sc_LevelManager : MonoBehaviour
         {
             mob.gameObject.SetActive(true);
             mob.Respawn();
+            mob.player = null;
         }
 
         data.mainDoor.canActivate = false;

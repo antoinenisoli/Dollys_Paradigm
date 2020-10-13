@@ -86,7 +86,7 @@ public class Sc_LevelManager : MonoBehaviour
             mob.player = null;
         }
 
-        data.mainDoor.canActivate = false;
+        data.mainDoor.ResetMachine();
     }
 
     private void Update()

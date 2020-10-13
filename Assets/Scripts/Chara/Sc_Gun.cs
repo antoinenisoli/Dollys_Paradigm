@@ -13,6 +13,7 @@ public class Sc_Gun : MonoBehaviour
     
     [Header("Shooting")]
     [SerializeField] int damage = 5;
+    [SerializeField] Light muzzleFlash;
     [SerializeField] float shootRange = 50;
     [SerializeField] GameObject[] shootFX;
     [SerializeField] LayerMask shootLayer;
@@ -25,7 +26,7 @@ public class Sc_Gun : MonoBehaviour
     [SerializeField] bool Auto;
     [SerializeField] LayerMask interactLayer;
     [SerializeField] GameObject useText;
-    Sc_Door door;
+    Sc_Interactable lastInteractable;
 
     [Header("Ammos")]
     [SerializeField] Slider ammoSlider;
@@ -56,9 +57,10 @@ public class Sc_Gun : MonoBehaviour
     void Shooting()
     {
         timer += Time.deltaTime;
+        bool holdingFire;
         if (Auto)
         {
-            bool holdingFire = Input.GetButton("Fire1") && CurrentAmmo > 0 && !player.Health.isDead;
+            holdingFire = Input.GetButton("Fire1") && !player.Health.isDead;
             anim.SetBool("HoldingFire", holdingFire);
 
             if (holdingFire && CurrentAmmo > 0)
@@ -79,12 +81,15 @@ public class Sc_Gun : MonoBehaviour
         }
         else
         {
-            if (Input.GetButtonDown("Fire1") && timer > shootDelay)
+            holdingFire = Input.GetButtonDown("Fire1") && timer > shootDelay;
+            if (holdingFire)
             {
                 anim.SetTrigger("Shoot");
                 timer = 0;
             }
         }
+
+        muzzleFlash.gameObject.SetActive(holdingFire && CurrentAmmo > 0);
     }
 
     public void Shoot()
@@ -123,30 +128,31 @@ public class Sc_Gun : MonoBehaviour
         detectInteract = Physics.Raycast(ray, out RaycastHit hit, 5, interactLayer);
         if (detectInteract)
         {
-            Sc_Door obj = hit.collider.GetComponent<Sc_Door>();            
+            Sc_Interactable obj = hit.collider.GetComponent<Sc_Interactable>();            
             if (obj)
             {
                 if (Input.GetButtonDown("Interact") && obj.canActivate)
                     obj.Activate(player);
 
-                door = obj;
                 useText.SetActive(obj && obj.canActivate);
-                door.outline.enabled = obj && obj.canActivate;
+                lastInteractable = obj;
+                if (lastInteractable != null)
+                    lastInteractable.outline.enabled = obj && obj.canActivate;
             }
             else
             {
                 useText.SetActive(false);
 
-                if (door != null)
-                    door.outline.enabled = false;
+                if (lastInteractable != null)
+                    lastInteractable.outline.enabled = false;
             }
         }
         else
         {
             useText.SetActive(false);
 
-            if (door != null)
-                door.outline.enabled = false;
+            if (lastInteractable != null)
+                lastInteractable.outline.enabled = false;
         }
     }
 

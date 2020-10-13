@@ -58,7 +58,7 @@ public class MeshOutline : MonoBehaviour {
   [SerializeField]
   private Color outlineColor = Color.white;
 
-  [SerializeField, Range(0f, 10f)]
+  [SerializeField, Range(0f, 30f)]
   private float outlineWidth = 2f;
 
   [Header("Optional")]

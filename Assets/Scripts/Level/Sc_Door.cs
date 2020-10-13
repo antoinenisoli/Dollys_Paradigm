@@ -5,14 +5,17 @@ using UnityEngine;
 public class Sc_Door : Sc_Interactable
 {
     Sc_GameManager manager => FindObjectOfType<Sc_GameManager>();
-    public MeshOutline outline => GetComponentInChildren<MeshOutline>();
     Animator anim => GetComponent<Animator>();
+    Light myLight => GetComponentInChildren<Light>();
 
     public Sc_DoorSpawn destination;
+    [SerializeField] MeshRenderer doorMesh;
+    [SerializeField] Material lockMat, openMat;
 
     private void Awake()
     {
         outline.enabled = false;
+        lockMat = doorMesh.material;
     }
 
     public override void Activate(Sc_Character chara)
@@ -29,9 +32,21 @@ public class Sc_Door : Sc_Interactable
         }
     }
 
+    public override void ResetMachine()
+    {
+        base.ResetMachine();
+        doorMesh.material = lockMat;
+        myLight.color = Color.red;
+        myLight.GetComponent<Animator>().SetBool("Emergency", true);
+    }
+
     public override void Open(float delay)
     {
         base.Open(delay);
+        doorMesh.material = openMat;
+        myLight.intensity = 4;
+        myLight.GetComponent<Animator>().SetBool("Emergency", false);
+        myLight.color = Color.green;
         StartCoroutine(LaunchOpen(delay));
     }
 

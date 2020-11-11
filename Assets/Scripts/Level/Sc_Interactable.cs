@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Sc_Interactable : MonoBehaviour
+public abstract class Sc_Interactable : MonoBehaviour
 {
     public MeshOutline outline => GetComponentInChildren<MeshOutline>();
 
@@ -14,10 +14,7 @@ public class Sc_Interactable : MonoBehaviour
         outline.enabled = false;
     }
 
-    public virtual void Open(float delay)
-    {
-        
-    }
+    public abstract void Open(float delay);
 
     public virtual void ResetMachine()
     {

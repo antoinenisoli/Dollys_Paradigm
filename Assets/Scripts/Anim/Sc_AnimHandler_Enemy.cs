@@ -4,13 +4,13 @@ using UnityEngine;
 
 public class Sc_AnimHandler_Enemy : MonoBehaviour
 {
-    Sc_Enemy sh => GetComponentInParent<Sc_Enemy>();
+    Sc_Enemy enemy => GetComponentInParent<Sc_Enemy>();
 
     [SerializeField] GameObject explosionSound;
 
     public void LaunchShoot()
     {
-        sh.LaunchAttack();
+        enemy.LaunchAttack();
     }
 
     public void PlaySound()
@@ -20,6 +20,6 @@ public class Sc_AnimHandler_Enemy : MonoBehaviour
 
     public void Death()
     {
-        sh.gameObject.SetActive(false);
+        enemy.gameObject.SetActive(false);
     }
 }

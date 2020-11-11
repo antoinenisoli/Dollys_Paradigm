@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Sc_Character : MonoBehaviour
+public abstract class Sc_Character : MonoBehaviour
 {
     protected Sc_GameManager manager => FindObjectOfType<Sc_GameManager>();
     public Sc_Health Health => GetComponent<Sc_Health>();
@@ -35,10 +35,7 @@ public class Sc_Character : MonoBehaviour
         Health.TakeDamages(_dmg);
     }
 
-    public virtual void Death()
-    {
-        
-    }
+    public abstract void Death();
 
     public virtual IEnumerator ChangeLifeColor(Color color)
     {

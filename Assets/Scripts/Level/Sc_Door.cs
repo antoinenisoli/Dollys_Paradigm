@@ -42,7 +42,6 @@ public class Sc_Door : Sc_Interactable
 
     public override void Open(float delay)
     {
-        base.Open(delay);
         doorMesh.material = openMat;
         myLight.intensity = 4;
         myLight.GetComponent<Animator>().SetBool("Emergency", false);

@@ -28,8 +28,6 @@ public class Sc_OverlayUI : MonoBehaviour
         glowText.SetColor("_EmissionColor", col);
         overlays.alpha = 1 - healthValue;
         overlays.alpha = Mathf.Clamp(overlays.alpha, 0, 0.75f);
-
-
         roomIndicator.text = "Room #" + gm.roomIndex;
     }
 }

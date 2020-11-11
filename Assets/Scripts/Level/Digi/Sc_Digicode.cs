@@ -68,7 +68,6 @@ public class Sc_Digicode : Sc_Interactable
 
     public override void Open(float delay)
     {
-        base.Open(delay);
         textAnim.SetTrigger("TryCode");
         StartCoroutine(CheckAnim(delay));
         activated = true;
@@ -77,21 +76,12 @@ public class Sc_Digicode : Sc_Interactable
     IEnumerator CheckAnim(float _delay)
     {
         isChecking = true;
-        diode.SetActive(true);
-        yield return new WaitForSeconds(_delay);
-        diode.SetActive(false);
-        yield return new WaitForSeconds(_delay);
-        diode.SetActive(true);
-        yield return new WaitForSeconds(_delay);
-        diode.SetActive(false);
-        yield return new WaitForSeconds(_delay);
-        diode.SetActive(true);
-        yield return new WaitForSeconds(_delay);
-        diode.SetActive(false);
-        yield return new WaitForSeconds(_delay);
-        diode.SetActive(true);
-        yield return new WaitForSeconds(_delay);
-        diode.SetActive(false);
+
+        for (int i = 0; i < 4; i++)
+        {
+            yield return new WaitForSeconds(_delay);
+            diode.SetActive(!diode.activeSelf);
+        }
 
         ResetCode();
         isChecking = false;

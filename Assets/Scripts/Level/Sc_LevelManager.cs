@@ -6,8 +6,8 @@ using UnityEngine;
 [Serializable]
 public class LevelData
 {
-    public Sc_Door mainDoor;
-    public Sc_DoorSpawn roomSpawn;
+    [HideInInspector] public Sc_Door mainDoor;
+    [HideInInspector] public Sc_DoorSpawn roomSpawn;
     public List<Sc_Enemy> currentEnemies;
     public List<Sc_Enemy> allEnemies = new List<Sc_Enemy>();
 

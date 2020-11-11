@@ -4,7 +4,7 @@ using UnityEditor;
 using UnityEngine;
 using UnityEngine.AI;
 
-public class Sc_Enemy : Sc_Character
+public abstract class Sc_Enemy : Sc_Character
 {
     protected Animator anim => GetComponentInChildren<Animator>();
     protected SpriteRenderer spr => GetComponentInChildren<SpriteRenderer>();

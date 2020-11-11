@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
 
-public class Sc_Digicode_Button : Sc_Interactable
+public abstract class Sc_Digicode_Button : Sc_Interactable
 {
     protected TextMeshPro myText => GetComponentInChildren<TextMeshPro>();
     protected Sc_Digicode digicode => FindObjectOfType<Sc_Digicode>();
@@ -22,5 +22,10 @@ public class Sc_Digicode_Button : Sc_Interactable
     private void Update()
     {
         canActivate = !anim.GetCurrentAnimatorStateInfo(0).IsName("DigicodeButton_Push") && digicode.maxSize;
+    }
+
+    public override void Open(float delay)
+    {
+        
     }
 }
